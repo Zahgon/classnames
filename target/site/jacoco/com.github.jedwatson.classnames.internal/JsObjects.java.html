@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JsObjects.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">classnames</a> &gt; <a href="index.source.html" class="el_package">com.github.jedwatson.classnames.internal</a> &gt; <span class="el_source">JsObjects.java</span></div><h1>JsObjects.java</h1><pre class="source lang-java linenums">package com.github.jedwatson.classnames.internal;
+
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * JavaScript object-property semantics: own-key enumeration and {@code for...in} ordering.
+ *
+ * &lt;p&gt;Property enumeration order is externally observable in this library, because the
+ * output string is built by iterating object keys. Reproducing it is therefore a
+ * correctness requirement, not a cosmetic one.
+ */
+public final class JsObjects {
+
+    /** Exclusive upper bound for a JavaScript array index: 2^32 - 1. */
+    private static final long MAX_ARRAY_INDEX = 4294967295L;
+
+    private JsObjects() {
+    }
+
+    /**
+     * Returns own enumerable keys in JavaScript {@code for...in} order.
+     *
+     * &lt;p&gt;The ECMAScript ordinary-own-property-keys order is:
+     * &lt;ol&gt;
+     *   &lt;li&gt;integer-like keys (&quot;array indices&quot;) in &lt;strong&gt;ascending numeric order&lt;/strong&gt;,&lt;/li&gt;
+     *   &lt;li&gt;then remaining string keys in &lt;strong&gt;insertion order&lt;/strong&gt;.&lt;/li&gt;
+     * &lt;/ol&gt;
+     *
+     * &lt;p&gt;Verified against the source runtime:
+     * &lt;pre&gt;{@code
+     * Object.keys({b:1, 2:1, a:1, 1:1})  // =&gt; [&quot;1&quot;, &quot;2&quot;, &quot;b&quot;, &quot;a&quot;]
+     * classNames({b:true, 2:true, a:true, 1:true})  // =&gt; &quot;1 2 b a&quot;
+     * }&lt;/pre&gt;
+     *
+     * &lt;p&gt;This is why neither {@link java.util.HashMap} (arbitrary order) nor
+     * {@link LinkedHashMap} alone (pure insertion order, yielding {@code &quot;b 2 a 1&quot;}) is a
+     * correct migration of a JavaScript object.
+     *
+     * @param map a map modelling a JavaScript object literal
+     * @return keys ordered exactly as JavaScript would enumerate them
+     */
+    public static List&lt;String&gt; ownKeys(Map&lt;?, ?&gt; map) {
+<span class="fc" id="L49">        List&lt;String&gt; indexKeys = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L50">        List&lt;String&gt; stringKeys = new ArrayList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        for (Object rawKey : map.keySet()) {</span>
+            // JavaScript object keys are always strings (symbols are not enumerated by
+            // for...in). A non-string Java key is coerced the same way JS would coerce it.
+<span class="fc bfc" id="L55" title="All 2 branches covered.">            String key = rawKey == null ? &quot;null&quot; : String.valueOf(rawKey);</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">            if (isArrayIndex(key)) {</span>
+<span class="fc" id="L57">                indexKeys.add(key);</span>
+            } else {
+<span class="fc" id="L59">                stringKeys.add(key);</span>
+            }
+<span class="fc" id="L61">        }</span>
+
+        // Ascending NUMERIC order - not lexicographic. &quot;10&quot; must follow &quot;9&quot;.
+<span class="fc" id="L64">        indexKeys.sort((a, b) -&gt; Long.compare(Long.parseLong(a), Long.parseLong(b)));</span>
+
+<span class="fc" id="L66">        List&lt;String&gt; ordered = new ArrayList&lt;&gt;(indexKeys.size() + stringKeys.size());</span>
+<span class="fc" id="L67">        ordered.addAll(indexKeys);</span>
+<span class="fc" id="L68">        ordered.addAll(stringKeys);</span>
+<span class="fc" id="L69">        return ordered;</span>
+    }
+
+    /**
+     * Determines whether a key is a JavaScript &quot;array index&quot;.
+     *
+     * &lt;p&gt;A key qualifies only when it is the &lt;em&gt;canonical&lt;/em&gt; decimal string of an
+     * integer in {@code [0, 2^32 - 1)}. This deliberately excludes {@code &quot;01&quot;},
+     * {@code &quot;-1&quot;}, {@code &quot;1.5&quot;}, {@code &quot; 1&quot;} and {@code &quot;+1&quot;}: JavaScript treats those
+     * as ordinary string keys and enumerates them in insertion order.
+     */
+    static boolean isArrayIndex(String key) {
+<span class="fc bfc" id="L81" title="All 4 branches covered.">        if (key.isEmpty() || key.length() &gt; 10) {</span>
+<span class="fc" id="L82">            return false;</span>
+        }
+<span class="fc bfc" id="L84" title="All 2 branches covered.">        for (int i = 0; i &lt; key.length(); i++) {</span>
+<span class="fc" id="L85">            char c = key.charAt(i);</span>
+<span class="fc bfc" id="L86" title="All 4 branches covered.">            if (c &lt; '0' || c &gt; '9') {</span>
+<span class="fc" id="L87">                return false;</span>
+            }
+        }
+        // Reject non-canonical forms such as &quot;01&quot; (but keep a bare &quot;0&quot;).
+<span class="fc bfc" id="L91" title="All 4 branches covered.">        if (key.length() &gt; 1 &amp;&amp; key.charAt(0) == '0') {</span>
+<span class="fc" id="L92">            return false;</span>
+        }
+<span class="fc" id="L94">        long value = Long.parseLong(key);</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        return value &lt; MAX_ARRAY_INDEX;</span>
+    }
+
+    /**
+     * Reads a property value from a value modelling a JavaScript object.
+     *
+     * @param target the object-like value
+     * @param key    the property name, as returned by {@link #ownKeys(Map)}
+     * @return the property value, or {@code null} when absent
+     */
+    public static Object get(Map&lt;?, ?&gt; target, String key) {
+<span class="fc" id="L106">        Object direct = target.get(key);</span>
+<span class="fc bfc" id="L107" title="All 4 branches covered.">        if (direct != null || target.containsKey(key)) {</span>
+<span class="fc" id="L108">            return direct;</span>
+        }
+        // The map may be keyed by a non-String type whose toString matches the key.
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        for (Map.Entry&lt;?, ?&gt; entry : target.entrySet()) {</span>
+<span class="fc" id="L112">            Object rawKey = entry.getKey();</span>
+<span class="fc bfc" id="L113" title="All 2 branches covered.">            String coerced = rawKey == null ? &quot;null&quot; : String.valueOf(rawKey);</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">            if (coerced.equals(key)) {</span>
+<span class="fc" id="L115">                return entry.getValue();</span>
+            }
+<span class="fc" id="L117">        }</span>
+<span class="fc" id="L118">        return null;</span>
+    }
+
+    /**
+     * Converts a plain Java object into its JavaScript own-property view.
+     *
+     * &lt;p&gt;MIGRATION DECISION (documented extension point - see workflow §L5): the
+     * JavaScript source only ever receives object literals and class instances, and gives
+     * no guidance on how a Java POJO should be enumerated. This migration enumerates
+     * &lt;strong&gt;public instance fields&lt;/strong&gt;, declaring-class first, in declaration
+     * order. That is the closest analogue of JavaScript &quot;own enumerable data properties&quot;:
+     * a JS class instance exposes the data assigned in its constructor, and Java's public
+     * fields are the equivalent public data surface.
+     *
+     * &lt;p&gt;Getters are deliberately NOT invoked: they are a Java-specific convention with no
+     * JavaScript counterpart, and calling them could trigger side effects the JavaScript
+     * source would never cause.
+     *
+     * &lt;p&gt;A POJO that declares its own {@code toString} never reaches this method - the
+     * caller routes it to the {@code toString} branch first, matching the source.
+     *
+     * @param target a non-null POJO
+     * @return an insertion-ordered map of public field names to values
+     */
+    public static Map&lt;String, Object&gt; propertiesOf(Object target) {
+<span class="fc" id="L143">        Map&lt;String, Object&gt; properties = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L144">        collectFields(target, target.getClass(), properties);</span>
+<span class="fc" id="L145">        return properties;</span>
+    }
+
+    private static void collectFields(Object target, Class&lt;?&gt; type, Map&lt;String, Object&gt; out) {
+<span class="pc bpc" id="L149" title="1 of 4 branches missed.">        if (type == null || type == Object.class) {</span>
+<span class="fc" id="L150">            return;</span>
+        }
+        // Superclass fields first, matching prototype-chain construction order.
+<span class="fc" id="L153">        collectFields(target, type.getSuperclass(), out);</span>
+
+<span class="fc bfc" id="L155" title="All 2 branches covered.">        for (Field field : type.getDeclaredFields()) {</span>
+<span class="fc" id="L156">            int modifiers = field.getModifiers();</span>
+<span class="pc bpc" id="L157" title="1 of 6 branches missed.">            if (!Modifier.isPublic(modifiers) || Modifier.isStatic(modifiers) || field.isSynthetic()) {</span>
+<span class="nc" id="L158">                continue;</span>
+            }
+            // Java denies access to a public field when its DECLARING CLASS is not
+            // public. JavaScript always enumerates own properties, so skipping here
+            // would silently drop them - escalate rather than diverge.
+<span class="pc bpc" id="L163" title="1 of 4 branches missed.">            if (!field.canAccess(target) &amp;&amp; !field.trySetAccessible()) {</span>
+<span class="nc" id="L164">                throw new IllegalStateException(</span>
+<span class="nc" id="L165">                        &quot;Unable to read public field '&quot; + field.getName() + &quot;' on &quot;</span>
+<span class="nc" id="L166">                                + type.getName() + &quot;: the declaring class is not accessible&quot;</span>
+<span class="nc" id="L167">                                + &quot; to &quot; + JsObjects.class.getName()</span>
+                                + &quot;. Make the class public or open its module.&quot;);
+            }
+
+            try {
+<span class="fc" id="L172">                out.put(field.getName(), field.get(target));</span>
+<span class="nc" id="L173">            } catch (IllegalAccessException e) {</span>
+<span class="nc" id="L174">                throw new IllegalStateException(</span>
+<span class="nc" id="L175">                        &quot;Unable to read public field '&quot; + field.getName()</span>
+<span class="nc" id="L176">                                + &quot;' on &quot; + type.getName(), e);</span>
+<span class="fc" id="L177">            }</span>
+        }
+<span class="fc" id="L179">    }</span>
+
+    /**
+     * Returns the elements of an array-like value in index order.
+     *
+     * &lt;p&gt;Accepts Java arrays (including primitive arrays, whose elements are boxed) and
+     * {@link Iterable}. Both are reasonable migrations of a JavaScript array literal, so
+     * both are supported rather than forcing callers to pick one.
+     *
+     * @param value an array or iterable
+     * @return its elements in order
+     * @throws IllegalArgumentException if the value is not array-like
+     */
+    public static List&lt;Object&gt; arrayElements(Object value) {
+<span class="fc bfc" id="L193" title="All 2 branches covered.">        if (value instanceof List&lt;?&gt; list) {</span>
+<span class="fc" id="L194">            return new ArrayList&lt;&gt;(list);</span>
+        }
+<span class="fc bfc" id="L196" title="All 2 branches covered.">        if (value instanceof Iterable&lt;?&gt; iterable) {</span>
+<span class="fc" id="L197">            List&lt;Object&gt; elements = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L198" title="All 2 branches covered.">            for (Object element : iterable) {</span>
+<span class="fc" id="L199">                elements.add(element);</span>
+<span class="fc" id="L200">            }</span>
+<span class="fc" id="L201">            return elements;</span>
+        }
+<span class="fc bfc" id="L203" title="All 2 branches covered.">        if (value.getClass().isArray()) {</span>
+<span class="fc" id="L204">            int length = Array.getLength(value);</span>
+<span class="fc" id="L205">            List&lt;Object&gt; elements = new ArrayList&lt;&gt;(length);</span>
+<span class="fc bfc" id="L206" title="All 2 branches covered.">            for (int i = 0; i &lt; length; i++) {</span>
+<span class="fc" id="L207">                elements.add(Array.get(value, i));</span>
+            }
+<span class="fc" id="L209">            return elements;</span>
+        }
+<span class="fc" id="L211">        throw new IllegalArgumentException(</span>
+<span class="fc" id="L212">                &quot;Not an array-like value: &quot; + value.getClass().getName());</span>
+    }
+
+    /**
+     * Whether the value should be treated as a JavaScript array.
+     *
+     * &lt;p&gt;Mirrors {@code Array.isArray(arg)}. A {@link Map} is explicitly excluded even
+     * though it is object-like, matching the source's ordering of checks.
+     *
+     * @param value a non-null value
+     * @return {@code true} when the value should be flattened as an array
+     */
+    public static boolean isArrayLike(Object value) {
+<span class="pc bpc" id="L225" title="1 of 6 branches missed.">        return value.getClass().isArray()</span>
+                || (value instanceof Iterable &amp;&amp; !(value instanceof Map));
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

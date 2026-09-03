@@ -1,0 +1,523 @@
+{
+	"generatedBy": "verification/generate-baseline.mjs",
+	"results": [
+		{
+			"id": "falsy/empty-args",
+			"classNames": "",
+			"bindUnbound": "",
+			"bindBound": "",
+			"dedupe": ""
+		},
+		{
+			"id": "falsy/all-falsy-args",
+			"classNames": "",
+			"bindUnbound": "",
+			"bindBound": "",
+			"dedupe": ""
+		},
+		{
+			"id": "falsy/single-empty-string",
+			"classNames": "",
+			"bindUnbound": "",
+			"bindBound": "",
+			"dedupe": ""
+		},
+		{
+			"id": "falsy/single-zero",
+			"classNames": "",
+			"bindUnbound": "",
+			"bindBound": "",
+			"dedupe": ""
+		},
+		{
+			"id": "falsy/single-nan",
+			"classNames": "",
+			"bindUnbound": "",
+			"bindBound": "",
+			"dedupe": ""
+		},
+		{
+			"id": "falsy/single-negzero",
+			"classNames": "",
+			"bindUnbound": "",
+			"bindBound": "",
+			"dedupe": ""
+		},
+		{
+			"id": "truthy/whitespace-string",
+			"classNames": " ",
+			"bindUnbound": " ",
+			"bindBound": " ",
+			"dedupe": ""
+		},
+		{
+			"id": "truthy/string-zero",
+			"classNames": "0",
+			"bindUnbound": "0",
+			"bindBound": "0",
+			"dedupe": "0"
+		},
+		{
+			"id": "truthy/negative-number-arg",
+			"classNames": "",
+			"bindUnbound": "",
+			"bindBound": "",
+			"dedupe": ""
+		},
+		{
+			"id": "truthy/float-arg",
+			"classNames": "",
+			"bindUnbound": "",
+			"bindBound": "",
+			"dedupe": ""
+		},
+		{
+			"id": "truthy/bool-true-arg",
+			"classNames": "",
+			"bindUnbound": "",
+			"bindBound": "",
+			"dedupe": ""
+		},
+		{
+			"id": "truthy/function-arg",
+			"classNames": "",
+			"bindUnbound": "",
+			"bindBound": "",
+			"dedupe": ""
+		},
+		{
+			"id": "truthy/empty-object-arg",
+			"classNames": "",
+			"bindUnbound": "",
+			"bindBound": "",
+			"dedupe": ""
+		},
+		{
+			"id": "truthy/empty-array-arg",
+			"classNames": "",
+			"bindUnbound": "",
+			"bindBound": "",
+			"dedupe": ""
+		},
+		{
+			"id": "object/truthy-falsy-matrix",
+			"classNames": "nonEmptyString whitespace function emptyObject nonEmptyObject emptyList nonEmptyList greaterZero",
+			"bindUnbound": "nonEmptyString whitespace function emptyObject nonEmptyObject emptyList nonEmptyList greaterZero",
+			"bindBound": "nonEmptyString whitespace function emptyObject nonEmptyObject emptyList nonEmptyList greaterZero",
+			"dedupe": "nonEmptyString whitespace function emptyObject nonEmptyObject emptyList nonEmptyList greaterZero"
+		},
+		{
+			"id": "order/numeric-and-string-keys",
+			"classNames": "1 2 b a",
+			"bindUnbound": "1 2 b a",
+			"bindBound": "1 2 #b #a",
+			"dedupe": "1 2 b a"
+		},
+		{
+			"id": "order/numeric-descending-input",
+			"classNames": "9 10 100",
+			"bindUnbound": "9 10 100",
+			"bindBound": "9 10 100",
+			"dedupe": "9 10 100"
+		},
+		{
+			"id": "order/non-canonical-numeric",
+			"classNames": "0 2 01 -1",
+			"bindUnbound": "0 2 01 -1",
+			"bindBound": "0 2 01 -1",
+			"dedupe": "0 2 01 -1"
+		},
+		{
+			"id": "order/pure-string-keys",
+			"classNames": "zeta alpha mu",
+			"bindUnbound": "zeta alpha mu",
+			"bindBound": "zeta alpha mu",
+			"dedupe": "zeta alpha mu"
+		},
+		{
+			"id": "order/mixed-with-falsy",
+			"classNames": "1 b",
+			"bindUnbound": "1 b",
+			"bindBound": "1 #b",
+			"dedupe": "1 b"
+		},
+		{
+			"id": "order/large-index",
+			"classNames": "4294967294 4294967295 a",
+			"bindUnbound": "4294967294 4294967295 a",
+			"bindBound": "4294967294 4294967295 #a",
+			"dedupe": "4294967294 4294967295 a"
+		},
+		{
+			"id": "space/trailing-space",
+			"classNames": "a ",
+			"bindUnbound": "a ",
+			"bindBound": "a ",
+			"dedupe": "a "
+		},
+		{
+			"id": "space/leading-space",
+			"classNames": " a",
+			"bindUnbound": " a",
+			"bindBound": " a",
+			"dedupe": "a"
+		},
+		{
+			"id": "space/both-sides",
+			"classNames": " a ",
+			"bindUnbound": " a ",
+			"bindBound": " a ",
+			"dedupe": "a"
+		},
+		{
+			"id": "space/internal-double",
+			"classNames": "a  b",
+			"bindUnbound": "a  b",
+			"bindBound": "a  b",
+			"dedupe": "a b"
+		},
+		{
+			"id": "space/tab-separated",
+			"classNames": "a\tb",
+			"bindUnbound": "a\tb",
+			"bindBound": "a\tb",
+			"dedupe": "a b"
+		},
+		{
+			"id": "space/newline-separated",
+			"classNames": "a\nb",
+			"bindUnbound": "a\nb",
+			"bindBound": "a\nb",
+			"dedupe": "a b"
+		},
+		{
+			"id": "space/only-space",
+			"classNames": " ",
+			"bindUnbound": " ",
+			"bindBound": " ",
+			"dedupe": ""
+		},
+		{
+			"id": "space/multi-token",
+			"classNames": "foo bar baz",
+			"bindUnbound": "foo bar baz",
+			"bindBound": "foo bar baz",
+			"dedupe": "foo bar baz"
+		},
+		{
+			"id": "space/repeat-token",
+			"classNames": "foo foo",
+			"bindUnbound": "foo foo",
+			"bindBound": "foo foo",
+			"dedupe": "foo"
+		},
+		{
+			"id": "space/mixed-whitespace",
+			"classNames": " \t a \n b \t ",
+			"bindUnbound": " \t a \n b \t ",
+			"bindBound": " \t a \n b \t ",
+			"dedupe": "a b"
+		},
+		{
+			"id": "tostring/own",
+			"classNames": "classFromMethod",
+			"bindUnbound": "classFromMethod",
+			"bindBound": "classFromMethod",
+			"dedupe": "classFromMethod"
+		},
+		{
+			"id": "tostring/inherited",
+			"classNames": "classFromMethod",
+			"bindUnbound": "classFromMethod",
+			"bindBound": "classFromMethod",
+			"dedupe": "classFromMethod"
+		},
+		{
+			"id": "tostring/own-with-spaces",
+			"classNames": "one two",
+			"bindUnbound": "one two",
+			"bindBound": "one two",
+			"dedupe": "one two"
+		},
+		{
+			"id": "tostring/own-empty",
+			"classNames": "",
+			"bindUnbound": "",
+			"bindBound": "",
+			"dedupe": ""
+		},
+		{
+			"id": "tostring/in-array",
+			"classNames": "a classFromMethod",
+			"bindUnbound": "a classFromMethod",
+			"bindBound": "#a classFromMethod",
+			"dedupe": "a classFromMethod"
+		},
+		{
+			"id": "tostring/mixed-with-object",
+			"classNames": "x y",
+			"bindUnbound": "x y",
+			"bindBound": "x y",
+			"dedupe": "x y"
+		},
+		{
+			"id": "array/flat",
+			"classNames": "a b",
+			"bindUnbound": "a b",
+			"bindBound": "#a #b",
+			"dedupe": "a b"
+		},
+		{
+			"id": "array/nested",
+			"classNames": "a b c",
+			"bindUnbound": "a b c",
+			"bindBound": "#a #b #c",
+			"dedupe": "a b c"
+		},
+		{
+			"id": "array/deep",
+			"classNames": "a b c d",
+			"bindUnbound": "a b c d",
+			"bindBound": "#a #b #c #d",
+			"dedupe": "a b c d"
+		},
+		{
+			"id": "array/empty-nested",
+			"classNames": "a",
+			"bindUnbound": "a",
+			"bindBound": "#a",
+			"dedupe": "a"
+		},
+		{
+			"id": "array/with-falsy",
+			"classNames": "a b",
+			"bindUnbound": "a b",
+			"bindBound": "#a #b",
+			"dedupe": "a b"
+		},
+		{
+			"id": "array/with-objects",
+			"classNames": "a b",
+			"bindUnbound": "a b",
+			"bindBound": "#a #b",
+			"dedupe": "a b"
+		},
+		{
+			"id": "array/multiple-args",
+			"classNames": "a b c d",
+			"bindUnbound": "a b c d",
+			"bindBound": "#a #b #c #d",
+			"dedupe": "a b c d"
+		},
+		{
+			"id": "array/string-then-array",
+			"classNames": "c a b",
+			"bindUnbound": "c a b",
+			"bindBound": "#c #a #b",
+			"dedupe": "c a b"
+		},
+		{
+			"id": "array/very-deep",
+			"classNames": "deep",
+			"bindUnbound": "deep",
+			"bindBound": "deep",
+			"dedupe": "deep"
+		},
+		{
+			"id": "mixed/object-string-zero",
+			"classNames": "a b",
+			"bindUnbound": "a b",
+			"bindBound": "#a #b",
+			"dedupe": "a b"
+		},
+		{
+			"id": "mixed/trim-shape",
+			"classNames": "b",
+			"bindUnbound": "b",
+			"bindBound": "#b",
+			"dedupe": "b"
+		},
+		{
+			"id": "mixed/kitchen-sink",
+			"classNames": "one two four five six seven",
+			"bindUnbound": "one two four five six seven",
+			"bindBound": "one two four five six seven",
+			"dedupe": "one two four five six seven"
+		},
+		{
+			"id": "dedupe/repeat-strings",
+			"classNames": "foo bar foo bar foo",
+			"bindUnbound": "foo bar foo bar foo",
+			"bindBound": "foo bar foo bar foo",
+			"dedupe": "foo bar"
+		},
+		{
+			"id": "dedupe/toggle-off-on",
+			"classNames": "foo foo bar",
+			"bindUnbound": "foo foo bar",
+			"bindBound": "foo foo bar",
+			"dedupe": "foo bar"
+		},
+		{
+			"id": "dedupe/wipe-previous",
+			"classNames": "foo foo b",
+			"bindUnbound": "foo foo b",
+			"bindBound": "foo foo #b",
+			"dedupe": "b"
+		},
+		{
+			"id": "dedupe/prefix-collision",
+			"classNames": "foo foobar bar",
+			"bindUnbound": "foo foobar bar",
+			"bindBound": "foo foobar bar",
+			"dedupe": "foobar bar"
+		},
+		{
+			"id": "dedupe/hyphen-collision",
+			"classNames": "foo foo-bar bar",
+			"bindUnbound": "foo foo-bar bar",
+			"bindBound": "foo foo-bar bar",
+			"dedupe": "foo-bar bar"
+		},
+		{
+			"id": "dedupe/vendor-prefix",
+			"classNames": "foo -moz-foo-bar bar",
+			"bindUnbound": "foo -moz-foo-bar bar",
+			"bindBound": "foo -moz-foo-bar bar",
+			"dedupe": "-moz-foo-bar bar"
+		},
+		{
+			"id": "dedupe/toggle-then-off",
+			"classNames": "a a",
+			"bindUnbound": "a a",
+			"bindBound": "#a #a",
+			"dedupe": ""
+		},
+		{
+			"id": "dedupe/numeric-keys-toggle",
+			"classNames": "1 2",
+			"bindUnbound": "1 2",
+			"bindBound": "1 2",
+			"dedupe": "2"
+		},
+		{
+			"id": "bind/mapped-keys",
+			"classNames": "a f",
+			"bindUnbound": "a f",
+			"bindBound": "#a #f",
+			"dedupe": "a f"
+		},
+		{
+			"id": "bind/unmapped-passthrough",
+			"classNames": "a x z",
+			"bindUnbound": "a x z",
+			"bindBound": "#a x z",
+			"dedupe": "a x z"
+		},
+		{
+			"id": "bind/falsy-mapping-fallback",
+			"classNames": "falsyMapped",
+			"bindUnbound": "falsyMapped",
+			"bindBound": "falsyMapped",
+			"dedupe": "falsyMapped"
+		},
+		{
+			"id": "bind/zero-mapping-fallback",
+			"classNames": "zeroMapped",
+			"bindUnbound": "zeroMapped",
+			"bindBound": "zeroMapped",
+			"dedupe": "zeroMapped"
+		},
+		{
+			"id": "bind/array-mapped",
+			"classNames": "a b",
+			"bindUnbound": "a b",
+			"bindBound": "#a #b",
+			"dedupe": "a b"
+		},
+		{
+			"id": "bind/nested-array-mapped",
+			"classNames": "a b c",
+			"bindUnbound": "a b c",
+			"bindBound": "#a #b #c",
+			"dedupe": "a b c"
+		},
+		{
+			"id": "bind/tostring-not-mapped",
+			"classNames": "a",
+			"bindUnbound": "a",
+			"bindBound": "a",
+			"dedupe": "a"
+		},
+		{
+			"id": "bind/string-args",
+			"classNames": "a b",
+			"bindUnbound": "a b",
+			"bindBound": "#a #b",
+			"dedupe": "a b"
+		},
+		{
+			"id": "unicode/accented",
+			"classNames": "café",
+			"bindUnbound": "café",
+			"bindBound": "café",
+			"dedupe": "café"
+		},
+		{
+			"id": "unicode/cjk",
+			"classNames": "类名",
+			"bindUnbound": "类名",
+			"bindBound": "类名",
+			"dedupe": "类名"
+		},
+		{
+			"id": "unicode/emoji",
+			"classNames": "a-🎉-b",
+			"bindUnbound": "a-🎉-b",
+			"bindBound": "a-🎉-b",
+			"dedupe": "a-🎉-b"
+		},
+		{
+			"id": "unicode/combining",
+			"classNames": "é",
+			"bindUnbound": "é",
+			"bindBound": "é",
+			"dedupe": "é"
+		},
+		{
+			"id": "unicode/object-key",
+			"classNames": "café 类名",
+			"bindUnbound": "café 类名",
+			"bindBound": "café 类名",
+			"dedupe": "café 类名"
+		},
+		{
+			"id": "exotic/dotted",
+			"classNames": "a.b.c",
+			"bindUnbound": "a.b.c",
+			"bindBound": "a.b.c",
+			"dedupe": "a.b.c"
+		},
+		{
+			"id": "exotic/colon",
+			"classNames": "hover:bg-blue",
+			"bindUnbound": "hover:bg-blue",
+			"bindBound": "hover:bg-blue",
+			"dedupe": "hover:bg-blue"
+		},
+		{
+			"id": "exotic/slash",
+			"classNames": "w-1/2",
+			"bindUnbound": "w-1/2",
+			"bindBound": "w-1/2",
+			"dedupe": "w-1/2"
+		},
+		{
+			"id": "exotic/bracket",
+			"classNames": "w-[32px]",
+			"bindUnbound": "w-[32px]",
+			"bindBound": "w-[32px]",
+			"dedupe": "w-[32px]"
+		}
+	]
+}

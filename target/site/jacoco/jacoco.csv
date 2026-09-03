@@ -1,0 +1,6 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+classnames,com.github.jedwatson.classnames,ClassNamesDedupe,0,160,0,28,0,37,0,20,0,6
+classnames,com.github.jedwatson.classnames,ClassNamesBind,0,165,0,32,0,41,0,24,0,8
+classnames,com.github.jedwatson.classnames,ClassNames,0,112,0,26,0,28,0,16,0,3
+classnames,com.github.jedwatson.classnames.internal,JsValues,5,201,3,59,2,40,3,34,0,6
+classnames,com.github.jedwatson.classnames.internal,JsObjects,23,314,4,60,9,63,4,36,0,8

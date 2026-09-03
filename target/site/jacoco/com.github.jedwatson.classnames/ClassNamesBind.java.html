@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClassNamesBind.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">classnames</a> &gt; <a href="index.source.html" class="el_package">com.github.jedwatson.classnames</a> &gt; <span class="el_source">ClassNamesBind.java</span></div><h1>ClassNamesBind.java</h1><pre class="source lang-java linenums">package com.github.jedwatson.classnames;
+
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.github.jedwatson.classnames.internal.JsObjects;
+import com.github.jedwatson.classnames.internal.JsValues;
+
+/**
+ * The CSS-modules variant: class names are looked up through a bound mapping.
+ *
+ * &lt;p&gt;Java migration of {@code bind.js} from
+ * &lt;a href=&quot;https://github.com/JedWatson/classnames&quot;&gt;JedWatson/classnames&lt;/a&gt; v2.5.1.
+ *
+ * &lt;p&gt;In JavaScript this variant is used via {@code Function.prototype.bind}:
+ * &lt;pre&gt;{@code
+ * const cx = classNames.bind(styles);
+ * cx('a', { b: true });   // =&gt; styles.a + ' ' + styles.b
+ * }&lt;/pre&gt;
+ *
+ * &lt;p&gt;Java has no {@code this}-rebinding for static methods, so binding produces an
+ * &lt;em&gt;instance&lt;/em&gt; instead:
+ * &lt;pre&gt;{@code
+ * ClassNamesBind cx = ClassNamesBind.bind(styles);
+ * cx.apply(&quot;a&quot;, Map.of(&quot;b&quot;, true));
+ * }&lt;/pre&gt;
+ *
+ * &lt;p&gt;Classified as an accepted difference of type (A): the calling syntax differs because
+ * Java requires it, but the observable result - one bound callable per mapping - is
+ * identical. The unbound {@link #classNames(Object...)} static entry point is preserved
+ * and behaves exactly like {@code bind.js} called without a receiver.
+ */
+public final class ClassNamesBind {
+
+    /**
+     * The bound mapping, corresponding to {@code this} in {@code bind.js}.
+     * Empty for the unbound static entry point, matching {@code this === undefined}.
+     */
+    private final Map&lt;String, Object&gt; bindings;
+
+<span class="fc" id="L43">    private ClassNamesBind(Map&lt;String, Object&gt; bindings) {</span>
+<span class="fc" id="L44">        this.bindings = bindings;</span>
+<span class="fc" id="L45">    }</span>
+
+    /**
+     * Creates a bound instance, equivalent to {@code classNames.bind(mapping)}.
+     *
+     * @param mapping class-name mapping, typically a CSS-modules styles object
+     * @return a bound callable
+     */
+    public static ClassNamesBind bind(Map&lt;String, ?&gt; mapping) {
+<span class="fc" id="L54">        Map&lt;String, Object&gt; copy = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">        if (mapping != null) {</span>
+<span class="fc" id="L56">            copy.putAll(mapping);</span>
+        }
+        // Defensive copy: the source captures `this` by reference, but a JS caller cannot
+        // observe mutation through the bound function either, so copying preserves
+        // behavior while removing a Java-specific aliasing hazard.
+<span class="fc" id="L61">        return new ClassNamesBind(Collections.unmodifiableMap(copy));</span>
+    }
+
+    /**
+     * Invokes the bound variant.
+     *
+     * &lt;p&gt;Migrated from {@code bind.js:3-14} with {@code this} set to the bound mapping.
+     *
+     * @param args any number of strings, maps, arrays/lists, or objects
+     * @return the joined, mapped class names
+     */
+    public String apply(Object... args) {
+<span class="fc" id="L73">        return join(this.bindings, args);</span>
+    }
+
+    /**
+     * Invokes the unbound variant, equivalent to calling {@code bind.js} with no receiver.
+     *
+     * &lt;p&gt;With {@code this} undefined, {@code this &amp;&amp; this[arg] || arg} degrades to
+     * {@code arg}, so this behaves identically to {@link ClassNames#classNames(Object...)}.
+     *
+     * @param args any number of strings, maps, arrays/lists, or objects
+     * @return the joined class names
+     */
+    public static String classNames(Object... args) {
+<span class="fc" id="L86">        return join(Collections.emptyMap(), args);</span>
+    }
+
+    /** Migrated from {@code bind.js:3-14}. */
+    private static String join(Map&lt;String, Object&gt; bindings, Object... args) {
+<span class="fc" id="L91">        String classes = &quot;&quot;;</span>
+
+<span class="fc bfc" id="L93" title="All 2 branches covered.">        if (args == null) {</span>
+<span class="fc" id="L94">            return classes;</span>
+        }
+
+<span class="fc bfc" id="L97" title="All 2 branches covered.">        for (Object arg : args) {</span>
+<span class="fc bfc" id="L98" title="All 2 branches covered.">            if (JsValues.isTruthy(arg)) {</span>
+<span class="fc" id="L99">                classes = appendClass(classes, parseValue(bindings, arg));</span>
+            }
+        }
+
+<span class="fc" id="L103">        return classes;</span>
+    }
+
+    /** Migrated from {@code bind.js:16-42}. */
+    private static String parseValue(Map&lt;String, Object&gt; bindings, Object arg) {
+        // bind.js:17-19 - `return this &amp;&amp; this[arg] || arg;`
+<span class="fc bfc" id="L109" title="All 4 branches covered.">        if (arg instanceof CharSequence || arg instanceof Character) {</span>
+<span class="fc" id="L110">            return lookup(bindings, arg.toString());</span>
+        }
+
+        // bind.js:21-23
+<span class="fc bfc" id="L114" title="All 2 branches covered.">        if (!JsValues.isObjectLike(arg)) {</span>
+<span class="fc" id="L115">            return &quot;&quot;;</span>
+        }
+
+        // bind.js:25-27 - recursion propagates `this` via classNames.apply(this, arg).
+<span class="fc bfc" id="L119" title="All 2 branches covered.">        if (JsObjects.isArrayLike(arg)) {</span>
+<span class="fc" id="L120">            List&lt;Object&gt; elements = JsObjects.arrayElements(arg);</span>
+<span class="fc" id="L121">            return join(bindings, elements.toArray());</span>
+        }
+
+        // bind.js:29-31 - a custom toString result is NOT passed through the mapping.
+        // Pinned by tests/bind.js:152-163.
+<span class="fc bfc" id="L126" title="All 2 branches covered.">        if (JsValues.hasCustomToString(arg)) {</span>
+<span class="fc" id="L127">            return JsValues.toJsString(arg);</span>
+        }
+
+        // bind.js:33-41 - each retained key IS passed through the mapping.
+<span class="fc bfc" id="L131" title="All 2 branches covered.">        Map&lt;?, ?&gt; properties = arg instanceof Map&lt;?, ?&gt; map</span>
+<span class="fc" id="L132">                ? map</span>
+<span class="fc" id="L133">                : JsObjects.propertiesOf(arg);</span>
+
+<span class="fc" id="L135">        String classes = &quot;&quot;;</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">        for (String key : JsObjects.ownKeys(properties)) {</span>
+<span class="fc bfc" id="L137" title="All 2 branches covered.">            if (JsValues.isTruthy(JsObjects.get(properties, key))) {</span>
+<span class="fc" id="L138">                classes = appendClass(classes, lookup(bindings, key));</span>
+            }
+<span class="fc" id="L140">        }</span>
+
+<span class="fc" id="L142">        return classes;</span>
+    }
+
+    /**
+     * Reproduces {@code this &amp;&amp; this[key] || key} from {@code bind.js:18,37}.
+     *
+     * &lt;p&gt;The {@code ||} fallback is load-bearing: when the mapping holds a &lt;em&gt;falsy&lt;/em&gt;
+     * value for the key (an empty string, {@code 0}, {@code false}), JavaScript falls back
+     * to the raw key rather than emitting the falsy value. A plain
+     * {@code map.getOrDefault(key, key)} would be wrong, because it only falls back on
+     * absence, not on falsiness.
+     */
+    private static String lookup(Map&lt;String, Object&gt; bindings, String key) {
+<span class="fc bfc" id="L155" title="All 2 branches covered.">        if (bindings.isEmpty()) {</span>
+<span class="fc" id="L156">            return key;</span>
+        }
+<span class="fc" id="L158">        Object mapped = bindings.get(key);</span>
+<span class="fc bfc" id="L159" title="All 2 branches covered.">        return JsValues.isTruthy(mapped) ? JsValues.toJsString(mapped) : key;</span>
+    }
+
+    /** Migrated from {@code bind.js:44-50}. */
+    private static String appendClass(String value, String newClass) {
+<span class="fc bfc" id="L164" title="All 2 branches covered.">        if (!JsValues.isTruthy(newClass)) {</span>
+<span class="fc" id="L165">            return value;</span>
+        }
+<span class="fc bfc" id="L167" title="All 2 branches covered.">        return JsValues.isTruthy(value) ? value + &quot; &quot; + newClass : newClass;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

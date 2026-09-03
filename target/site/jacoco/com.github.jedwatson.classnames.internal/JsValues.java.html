@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JsValues.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">classnames</a> &gt; <a href="index.source.html" class="el_package">com.github.jedwatson.classnames.internal</a> &gt; <span class="el_source">JsValues.java</span></div><h1>JsValues.java</h1><pre class="source lang-java linenums">package com.github.jedwatson.classnames.internal;
+
+import java.lang.reflect.Method;
+import java.util.Map;
+
+/**
+ * JavaScript value semantics that Java does not provide natively.
+ *
+ * &lt;p&gt;The source package relies on JavaScript truthiness and duck-typed {@code toString}
+ * detection on nearly every line. Java has no equivalent for either, so both are
+ * reproduced explicitly here rather than approximated at each call site.
+ *
+ * &lt;p&gt;This class exists because the semantics are &lt;em&gt;implicit&lt;/em&gt; in JavaScript and must
+ * become &lt;em&gt;explicit&lt;/em&gt; in Java. It is not an added abstraction layer.
+ */
+public final class JsValues {
+
+    private JsValues() {
+    }
+
+    /**
+     * Reproduces JavaScript truthiness: {@code if (value)}.
+     *
+     * &lt;p&gt;The JavaScript falsy set is exactly:
+     * {@code false}, {@code 0}, {@code -0}, {@code 0n}, {@code &quot;&quot;}, {@code null},
+     * {@code undefined}, {@code NaN}. &lt;strong&gt;Every other value is truthy&lt;/strong&gt;,
+     * including {@code &quot; &quot;} (whitespace), {@code {}} (empty object), {@code []}
+     * (empty array) and function references.
+     *
+     * &lt;p&gt;This behavior is pinned by the source test
+     * {@code tests/index.js:71-92} (&quot;handles all types of truthy and falsy property
+     * values as expected&quot;), which asserts that an empty object, an empty list, a
+     * whitespace string and a function reference are all retained.
+     *
+     * &lt;p&gt;Note in particular that this is &lt;strong&gt;not&lt;/strong&gt; a null check. Substituting
+     * {@code value != null} would wrongly keep {@code &quot;&quot;}, {@code 0} and {@code false}.
+     *
+     * @param value any value, may be {@code null}
+     * @return {@code true} when JavaScript would treat the value as truthy
+     */
+    public static boolean isTruthy(Object value) {
+        // null covers both JS `null` and JS `undefined`. Both are falsy, and neither is
+        // distinguishable from the other in any observable way in this library.
+<span class="fc bfc" id="L44" title="All 2 branches covered.">        if (value == null) {</span>
+<span class="fc" id="L45">            return false;</span>
+        }
+
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        if (value instanceof Boolean b) {</span>
+<span class="fc" id="L49">            return b;</span>
+        }
+
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        if (value instanceof CharSequence cs) {</span>
+            // &quot;&quot; is falsy; &quot; &quot; is truthy.
+<span class="fc bfc" id="L54" title="All 2 branches covered.">            return cs.length() != 0;</span>
+        }
+
+<span class="fc bfc" id="L57" title="All 2 branches covered.">        if (value instanceof Character c) {</span>
+            // A JS single-character string is falsy only when empty, which a Character
+            // can never be. '\0' is a non-empty string in JS terms, therefore truthy.
+<span class="fc" id="L60">            return true;</span>
+        }
+
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        if (value instanceof Double d) {</span>
+            // Covers 0.0, -0.0 and NaN in one expression:
+            // NaN != NaN is true, and -0.0 == 0.0 is true.
+<span class="fc bfc" id="L66" title="All 4 branches covered.">            return d != 0.0d &amp;&amp; !d.isNaN();</span>
+        }
+
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        if (value instanceof Float f) {</span>
+<span class="fc bfc" id="L70" title="All 4 branches covered.">            return f != 0.0f &amp;&amp; !f.isNaN();</span>
+        }
+
+<span class="fc bfc" id="L73" title="All 2 branches covered.">        if (value instanceof Number n) {</span>
+            // Integral types (Byte, Short, Integer, Long, BigInteger, BigDecimal...).
+            // BigInteger.ZERO maps to JS `0n`, which is falsy.
+<span class="fc bfc" id="L76" title="All 2 branches covered.">            return n.doubleValue() != 0.0d;</span>
+        }
+
+        // Everything else - Map, List, arrays, POJOs, functional interfaces - is an
+        // object reference in JS terms and is therefore truthy regardless of contents.
+<span class="fc" id="L81">        return true;</span>
+    }
+
+    /**
+     * Reproduces the JavaScript {@code !!value} double-negation coercion.
+     *
+     * &lt;p&gt;Used by {@code dedupe.js:67} where object values are stored as explicit
+     * booleans rather than deleted, so a later argument can revive an earlier key
+     * without changing its position.
+     *
+     * @param value any value, may be {@code null}
+     * @return the truthiness of the value as a boxed Boolean
+     */
+    public static boolean toBoolean(Object value) {
+<span class="fc" id="L95">        return isTruthy(value);</span>
+    }
+
+    /**
+     * Determines whether a value should be treated as a JavaScript &quot;object&quot; for the
+     * purposes of {@code typeof arg === 'object'}.
+     *
+     * &lt;p&gt;In JavaScript, {@code typeof} returns {@code 'object'} for plain objects, arrays
+     * and class instances, but {@code 'function'} for functions and {@code 'number'} /
+     * {@code 'boolean'} for primitives. The source returns {@code ''} for anything that
+     * is neither a string nor an object, so numbers, booleans and functions passed
+     * directly as arguments produce no output.
+     *
+     * &lt;p&gt;Verified against the source runtime:
+     * {@code classNames(42) === ''} and {@code classNames(function(){}) === ''}.
+     *
+     * @param value a non-null value
+     * @return {@code true} when JavaScript {@code typeof} would yield {@code 'object'}
+     */
+    public static boolean isObjectLike(Object value) {
+<span class="fc bfc" id="L115" title="All 4 branches covered.">        if (value instanceof Map || value instanceof Iterable) {</span>
+<span class="fc" id="L116">            return true;</span>
+        }
+<span class="fc bfc" id="L118" title="All 2 branches covered.">        if (value.getClass().isArray()) {</span>
+<span class="fc" id="L119">            return true;</span>
+        }
+        // Primitives and their boxes are `typeof 'number'` / `'boolean'` - not objects.
+<span class="fc bfc" id="L122" title="All 8 branches covered.">        if (value instanceof Number || value instanceof Boolean</span>
+                || value instanceof CharSequence || value instanceof Character) {
+<span class="fc" id="L124">            return false;</span>
+        }
+        // A lambda / method reference is `typeof 'function'` in JS, which is NOT
+        // 'object', so it must produce '' when passed as a top-level argument.
+<span class="fc bfc" id="L128" title="All 2 branches covered.">        if (isFunctionLike(value)) {</span>
+<span class="fc" id="L129">            return false;</span>
+        }
+        // Remaining reference types are class instances - `typeof 'object'`.
+<span class="fc" id="L132">        return true;</span>
+    }
+
+    /**
+     * Detects values that correspond to a JavaScript {@code function}.
+     *
+     * &lt;p&gt;Java has no function type, so this recognises the two shapes that a migrated
+     * caller can realistically pass: a lambda / method reference (synthetic class
+     * implementing a single interface) and an explicit functional-interface instance.
+     */
+    private static boolean isFunctionLike(Object value) {
+<span class="fc" id="L143">        Class&lt;?&gt; type = value.getClass();</span>
+<span class="pc bpc" id="L144" title="1 of 4 branches missed.">        if (type.isSynthetic() &amp;&amp; type.getInterfaces().length &gt; 0) {</span>
+<span class="pc bpc" id="L145" title="1 of 2 branches missed.">            for (Class&lt;?&gt; iface : type.getInterfaces()) {</span>
+<span class="pc bpc" id="L146" title="1 of 2 branches missed.">                if (iface.isAnnotationPresent(FunctionalInterface.class)) {</span>
+<span class="fc" id="L147">                    return true;</span>
+                }
+            }
+        }
+<span class="fc" id="L151">        return false;</span>
+    }
+
+    /**
+     * Reproduces the source's custom-{@code toString} detection.
+     *
+     * &lt;p&gt;The JavaScript predicate is:
+     * &lt;pre&gt;{@code
+     * arg.toString !== Object.prototype.toString &amp;&amp;
+     *   !arg.toString.toString().includes('[native code]')
+     * }&lt;/pre&gt;
+     *
+     * &lt;p&gt;The first clause asks whether {@code toString} has been overridden. The second is
+     * a cross-realm guard: an object created inside a {@code vm} context has a
+     * &lt;em&gt;different&lt;/em&gt; {@code Object.prototype.toString} function object that is
+     * nonetheless still native, so the first clause alone would misfire. That case is
+     * pinned by {@code tests/index.js:107} (&quot;handles objects in a VM&quot;).
+     *
+     * &lt;p&gt;The Java equivalent satisfies both clauses at once by asking which class
+     * &lt;em&gt;declares&lt;/em&gt; the resolved {@code toString}. Java has no realms, so a
+     * non-overridden {@code toString} always resolves to {@link Object} itself.
+     * Inherited overrides resolve to the declaring superclass and are therefore honored,
+     * which matches the {@code class Class2 extends Class1} tests in all three suites.
+     *
+     * &lt;p&gt;Classified as an accepted difference of type (A): required by Java mechanics,
+     * externally observable behavior unchanged.
+     *
+     * @param value a non-null value
+     * @return {@code true} when the value declares its own {@code toString}
+     */
+    public static boolean hasCustomToString(Object value) {
+        // A Map models a JS object literal. A `toString` *key* in such a map is data,
+        // not a method override, and is handled by the caller before reaching here.
+<span class="fc bfc" id="L184" title="All 6 branches covered.">        if (value instanceof Map || value instanceof Iterable || value.getClass().isArray()) {</span>
+<span class="fc" id="L185">            return false;</span>
+        }
+        try {
+<span class="fc" id="L188">            Method toString = value.getClass().getMethod(&quot;toString&quot;);</span>
+<span class="fc bfc" id="L189" title="All 2 branches covered.">            return toString.getDeclaringClass() != Object.class;</span>
+<span class="nc" id="L190">        } catch (NoSuchMethodException e) {</span>
+            // Unreachable: every class inherits Object#toString. Treated as &quot;no override&quot;
+            // rather than swallowed - there is no error path to propagate here, because
+            // the JavaScript source likewise cannot fail at this point.
+<span class="nc" id="L194">            return false;</span>
+        }
+    }
+
+    /**
+     * Reproduces JavaScript string coercion for values that reach output.
+     *
+     * &lt;p&gt;Only ever applied to values the source itself stringifies: the result of a
+     * custom {@code toString} and bound-mapping lookups.
+     *
+     * @param value the value to coerce, may be {@code null}
+     * @return the JavaScript string form of the value
+     */
+    public static String toJsString(Object value) {
+<span class="fc bfc" id="L208" title="All 2 branches covered.">        if (value == null) {</span>
+<span class="fc" id="L209">            return &quot;null&quot;;</span>
+        }
+<span class="fc bfc" id="L211" title="All 2 branches covered.">        if (value instanceof CharSequence cs) {</span>
+<span class="fc" id="L212">            return cs.toString();</span>
+        }
+<span class="fc" id="L214">        return String.valueOf(value);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

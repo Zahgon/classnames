@@ -1,0 +1,1560 @@
+{
+	"bindings": {
+		"a": "#a",
+		"b": "#b",
+		"c": "#c",
+		"d": "#d",
+		"e": "#e",
+		"f": "#f",
+		"falsyMapped": "",
+		"zeroMapped": 0
+	},
+	"cases": [
+		{
+			"id": "falsy/empty-args",
+			"args": []
+		},
+		{
+			"id": "falsy/all-falsy-args",
+			"args": [
+				{
+					"t": "str",
+					"v": ""
+				},
+				{
+					"t": "int",
+					"v": 0
+				},
+				{
+					"t": "null"
+				},
+				{
+					"t": "undef"
+				},
+				{
+					"t": "bool",
+					"v": false
+				},
+				{
+					"t": "nan"
+				},
+				{
+					"t": "negzero"
+				}
+			]
+		},
+		{
+			"id": "falsy/single-empty-string",
+			"args": [
+				{
+					"t": "str",
+					"v": ""
+				}
+			]
+		},
+		{
+			"id": "falsy/single-zero",
+			"args": [
+				{
+					"t": "int",
+					"v": 0
+				}
+			]
+		},
+		{
+			"id": "falsy/single-nan",
+			"args": [
+				{
+					"t": "nan"
+				}
+			]
+		},
+		{
+			"id": "falsy/single-negzero",
+			"args": [
+				{
+					"t": "negzero"
+				}
+			]
+		},
+		{
+			"id": "truthy/whitespace-string",
+			"args": [
+				{
+					"t": "str",
+					"v": " "
+				}
+			]
+		},
+		{
+			"id": "truthy/string-zero",
+			"args": [
+				{
+					"t": "str",
+					"v": "0"
+				}
+			]
+		},
+		{
+			"id": "truthy/negative-number-arg",
+			"args": [
+				{
+					"t": "int",
+					"v": -1
+				}
+			]
+		},
+		{
+			"id": "truthy/float-arg",
+			"args": [
+				{
+					"t": "num",
+					"v": 1.5
+				}
+			]
+		},
+		{
+			"id": "truthy/bool-true-arg",
+			"args": [
+				{
+					"t": "bool",
+					"v": true
+				}
+			]
+		},
+		{
+			"id": "truthy/function-arg",
+			"args": [
+				{
+					"t": "fn"
+				}
+			]
+		},
+		{
+			"id": "truthy/empty-object-arg",
+			"args": [
+				{
+					"t": "obj",
+					"v": []
+				}
+			]
+		},
+		{
+			"id": "truthy/empty-array-arg",
+			"args": [
+				{
+					"t": "arr",
+					"v": []
+				}
+			]
+		},
+		{
+			"id": "object/truthy-falsy-matrix",
+			"args": [
+				{
+					"t": "obj",
+					"v": [
+						[
+							"null",
+							{
+								"t": "null"
+							}
+						],
+						[
+							"emptyString",
+							{
+								"t": "str",
+								"v": ""
+							}
+						],
+						[
+							"noNumber",
+							{
+								"t": "nan"
+							}
+						],
+						[
+							"zero",
+							{
+								"t": "int",
+								"v": 0
+							}
+						],
+						[
+							"negativeZero",
+							{
+								"t": "negzero"
+							}
+						],
+						[
+							"false",
+							{
+								"t": "bool",
+								"v": false
+							}
+						],
+						[
+							"undefined",
+							{
+								"t": "undef"
+							}
+						],
+						[
+							"nonEmptyString",
+							{
+								"t": "str",
+								"v": "foobar"
+							}
+						],
+						[
+							"whitespace",
+							{
+								"t": "str",
+								"v": " "
+							}
+						],
+						[
+							"function",
+							{
+								"t": "fn"
+							}
+						],
+						[
+							"emptyObject",
+							{
+								"t": "obj",
+								"v": []
+							}
+						],
+						[
+							"nonEmptyObject",
+							{
+								"t": "obj",
+								"v": [
+									[
+										"a",
+										{
+											"t": "int",
+											"v": 1
+										}
+									],
+									[
+										"b",
+										{
+											"t": "int",
+											"v": 2
+										}
+									]
+								]
+							}
+						],
+						[
+							"emptyList",
+							{
+								"t": "arr",
+								"v": []
+							}
+						],
+						[
+							"nonEmptyList",
+							{
+								"t": "arr",
+								"v": [
+									{
+										"t": "int",
+										"v": 1
+									},
+									{
+										"t": "int",
+										"v": 2
+									},
+									{
+										"t": "int",
+										"v": 3
+									}
+								]
+							}
+						],
+						[
+							"greaterZero",
+							{
+								"t": "int",
+								"v": 1
+							}
+						]
+					]
+				}
+			]
+		},
+		{
+			"id": "order/numeric-and-string-keys",
+			"args": [
+				{
+					"t": "obj",
+					"v": [
+						[
+							"b",
+							{
+								"t": "bool",
+								"v": true
+							}
+						],
+						[
+							"2",
+							{
+								"t": "bool",
+								"v": true
+							}
+						],
+						[
+							"a",
+							{
+								"t": "bool",
+								"v": true
+							}
+						],
+						[
+							"1",
+							{
+								"t": "bool",
+								"v": true
+							}
+						]
+					]
+				}
+			]
+		},
+		{
+			"id": "order/numeric-descending-input",
+			"args": [
+				{
+					"t": "obj",
+					"v": [
+						[
+							"10",
+							{
+								"t": "bool",
+								"v": true
+							}
+						],
+						[
+							"9",
+							{
+								"t": "bool",
+								"v": true
+							}
+						],
+						[
+							"100",
+							{
+								"t": "bool",
+								"v": true
+							}
+						]
+					]
+				}
+			]
+		},
+		{
+			"id": "order/non-canonical-numeric",
+			"args": [
+				{
+					"t": "obj",
+					"v": [
+						[
+							"01",
+							{
+								"t": "bool",
+								"v": true
+							}
+						],
+						[
+							"2",
+							{
+								"t": "bool",
+								"v": true
+							}
+						],
+						[
+							"-1",
+							{
+								"t": "bool",
+								"v": true
+							}
+						],
+						[
+							"0",
+							{
+								"t": "bool",
+								"v": true
+							}
+						]
+					]
+				}
+			]
+		},
+		{
+			"id": "order/pure-string-keys",
+			"args": [
+				{
+					"t": "obj",
+					"v": [
+						[
+							"zeta",
+							{
+								"t": "bool",
+								"v": true
+							}
+						],
+						[
+							"alpha",
+							{
+								"t": "bool",
+								"v": true
+							}
+						],
+						[
+							"mu",
+							{
+								"t": "bool",
+								"v": true
+							}
+						]
+					]
+				}
+			]
+		},
+		{
+			"id": "order/mixed-with-falsy",
+			"args": [
+				{
+					"t": "obj",
+					"v": [
+						[
+							"3",
+							{
+								"t": "bool",
+								"v": false
+							}
+						],
+						[
+							"b",
+							{
+								"t": "bool",
+								"v": true
+							}
+						],
+						[
+							"1",
+							{
+								"t": "bool",
+								"v": true
+							}
+						],
+						[
+							"a",
+							{
+								"t": "bool",
+								"v": false
+							}
+						]
+					]
+				}
+			]
+		},
+		{
+			"id": "order/large-index",
+			"args": [
+				{
+					"t": "obj",
+					"v": [
+						[
+							"4294967294",
+							{
+								"t": "bool",
+								"v": true
+							}
+						],
+						[
+							"4294967295",
+							{
+								"t": "bool",
+								"v": true
+							}
+						],
+						[
+							"a",
+							{
+								"t": "bool",
+								"v": true
+							}
+						]
+					]
+				}
+			]
+		},
+		{
+			"id": "space/trailing-space",
+			"args": [
+				{
+					"t": "str",
+					"v": "a "
+				}
+			]
+		},
+		{
+			"id": "space/leading-space",
+			"args": [
+				{
+					"t": "str",
+					"v": " a"
+				}
+			]
+		},
+		{
+			"id": "space/both-sides",
+			"args": [
+				{
+					"t": "str",
+					"v": " a "
+				}
+			]
+		},
+		{
+			"id": "space/internal-double",
+			"args": [
+				{
+					"t": "str",
+					"v": "a  b"
+				}
+			]
+		},
+		{
+			"id": "space/tab-separated",
+			"args": [
+				{
+					"t": "str",
+					"v": "a\tb"
+				}
+			]
+		},
+		{
+			"id": "space/newline-separated",
+			"args": [
+				{
+					"t": "str",
+					"v": "a\nb"
+				}
+			]
+		},
+		{
+			"id": "space/only-space",
+			"args": [
+				{
+					"t": "str",
+					"v": " "
+				}
+			]
+		},
+		{
+			"id": "space/multi-token",
+			"args": [
+				{
+					"t": "str",
+					"v": "foo bar baz"
+				}
+			]
+		},
+		{
+			"id": "space/repeat-token",
+			"args": [
+				{
+					"t": "str",
+					"v": "foo foo"
+				}
+			]
+		},
+		{
+			"id": "space/mixed-whitespace",
+			"args": [
+				{
+					"t": "str",
+					"v": " \t a \n b \t "
+				}
+			]
+		},
+		{
+			"id": "tostring/own",
+			"args": [
+				{
+					"t": "tostr",
+					"v": "classFromMethod"
+				}
+			]
+		},
+		{
+			"id": "tostring/inherited",
+			"args": [
+				{
+					"t": "inherited",
+					"v": "classFromMethod"
+				}
+			]
+		},
+		{
+			"id": "tostring/own-with-spaces",
+			"args": [
+				{
+					"t": "tostr",
+					"v": "one two"
+				}
+			]
+		},
+		{
+			"id": "tostring/own-empty",
+			"args": [
+				{
+					"t": "tostr",
+					"v": ""
+				}
+			]
+		},
+		{
+			"id": "tostring/in-array",
+			"args": [
+				{
+					"t": "arr",
+					"v": [
+						{
+							"t": "str",
+							"v": "a"
+						},
+						{
+							"t": "tostr",
+							"v": "classFromMethod"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "tostring/mixed-with-object",
+			"args": [
+				{
+					"t": "tostr",
+					"v": "x"
+				},
+				{
+					"t": "obj",
+					"v": [
+						[
+							"y",
+							{
+								"t": "bool",
+								"v": true
+							}
+						]
+					]
+				}
+			]
+		},
+		{
+			"id": "array/flat",
+			"args": [
+				{
+					"t": "arr",
+					"v": [
+						{
+							"t": "str",
+							"v": "a"
+						},
+						{
+							"t": "str",
+							"v": "b"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "array/nested",
+			"args": [
+				{
+					"t": "arr",
+					"v": [
+						{
+							"t": "str",
+							"v": "a"
+						},
+						{
+							"t": "arr",
+							"v": [
+								{
+									"t": "str",
+									"v": "b"
+								},
+								{
+									"t": "str",
+									"v": "c"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "array/deep",
+			"args": [
+				{
+					"t": "arr",
+					"v": [
+						{
+							"t": "str",
+							"v": "a"
+						},
+						{
+							"t": "arr",
+							"v": [
+								{
+									"t": "str",
+									"v": "b"
+								},
+								{
+									"t": "arr",
+									"v": [
+										{
+											"t": "str",
+											"v": "c"
+										},
+										{
+											"t": "obj",
+											"v": [
+												[
+													"d",
+													{
+														"t": "bool",
+														"v": true
+													}
+												]
+											]
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "array/empty-nested",
+			"args": [
+				{
+					"t": "str",
+					"v": "a"
+				},
+				{
+					"t": "arr",
+					"v": [
+						{
+							"t": "arr",
+							"v": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "array/with-falsy",
+			"args": [
+				{
+					"t": "arr",
+					"v": [
+						{
+							"t": "str",
+							"v": "a"
+						},
+						{
+							"t": "int",
+							"v": 0
+						},
+						{
+							"t": "null"
+						},
+						{
+							"t": "undef"
+						},
+						{
+							"t": "bool",
+							"v": false
+						},
+						{
+							"t": "bool",
+							"v": true
+						},
+						{
+							"t": "str",
+							"v": "b"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "array/with-objects",
+			"args": [
+				{
+					"t": "arr",
+					"v": [
+						{
+							"t": "str",
+							"v": "a"
+						},
+						{
+							"t": "obj",
+							"v": [
+								[
+									"b",
+									{
+										"t": "bool",
+										"v": true
+									}
+								],
+								[
+									"c",
+									{
+										"t": "bool",
+										"v": false
+									}
+								]
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "array/multiple-args",
+			"args": [
+				{
+					"t": "arr",
+					"v": [
+						{
+							"t": "str",
+							"v": "a"
+						},
+						{
+							"t": "str",
+							"v": "b"
+						}
+					]
+				},
+				{
+					"t": "arr",
+					"v": [
+						{
+							"t": "str",
+							"v": "c"
+						},
+						{
+							"t": "str",
+							"v": "d"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "array/string-then-array",
+			"args": [
+				{
+					"t": "str",
+					"v": "c"
+				},
+				{
+					"t": "arr",
+					"v": [
+						{
+							"t": "str",
+							"v": "a"
+						},
+						{
+							"t": "str",
+							"v": "b"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "array/very-deep",
+			"args": [
+				{
+					"t": "arr",
+					"v": [
+						{
+							"t": "arr",
+							"v": [
+								{
+									"t": "arr",
+									"v": [
+										{
+											"t": "arr",
+											"v": [
+												{
+													"t": "arr",
+													"v": [
+														{
+															"t": "str",
+															"v": "deep"
+														}
+													]
+												}
+											]
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "mixed/object-string-zero",
+			"args": [
+				{
+					"t": "obj",
+					"v": [
+						[
+							"a",
+							{
+								"t": "bool",
+								"v": true
+							}
+						]
+					]
+				},
+				{
+					"t": "str",
+					"v": "b"
+				},
+				{
+					"t": "int",
+					"v": 0
+				}
+			]
+		},
+		{
+			"id": "mixed/trim-shape",
+			"args": [
+				{
+					"t": "str",
+					"v": ""
+				},
+				{
+					"t": "str",
+					"v": "b"
+				},
+				{
+					"t": "obj",
+					"v": []
+				},
+				{
+					"t": "str",
+					"v": ""
+				}
+			]
+		},
+		{
+			"id": "mixed/kitchen-sink",
+			"args": [
+				{
+					"t": "str",
+					"v": "one"
+				},
+				{
+					"t": "obj",
+					"v": [
+						[
+							"two",
+							{
+								"t": "bool",
+								"v": true
+							}
+						],
+						[
+							"three",
+							{
+								"t": "bool",
+								"v": false
+							}
+						]
+					]
+				},
+				{
+					"t": "obj",
+					"v": [
+						[
+							"four",
+							{
+								"t": "str",
+								"v": "four"
+							}
+						],
+						[
+							"five",
+							{
+								"t": "bool",
+								"v": true
+							}
+						]
+					]
+				},
+				{
+					"t": "obj",
+					"v": []
+				},
+				{
+					"t": "arr",
+					"v": [
+						{
+							"t": "str",
+							"v": "six"
+						},
+						{
+							"t": "null"
+						}
+					]
+				},
+				{
+					"t": "int",
+					"v": 0
+				},
+				{
+					"t": "str",
+					"v": "seven"
+				}
+			]
+		},
+		{
+			"id": "dedupe/repeat-strings",
+			"args": [
+				{
+					"t": "str",
+					"v": "foo"
+				},
+				{
+					"t": "str",
+					"v": "bar"
+				},
+				{
+					"t": "str",
+					"v": "foo"
+				},
+				{
+					"t": "str",
+					"v": "bar"
+				},
+				{
+					"t": "obj",
+					"v": [
+						[
+							"foo",
+							{
+								"t": "bool",
+								"v": true
+							}
+						]
+					]
+				}
+			]
+		},
+		{
+			"id": "dedupe/toggle-off-on",
+			"args": [
+				{
+					"t": "str",
+					"v": "foo"
+				},
+				{
+					"t": "obj",
+					"v": [
+						[
+							"foo",
+							{
+								"t": "bool",
+								"v": false
+							}
+						]
+					]
+				},
+				{
+					"t": "obj",
+					"v": [
+						[
+							"foo",
+							{
+								"t": "bool",
+								"v": true
+							}
+						],
+						[
+							"bar",
+							{
+								"t": "bool",
+								"v": true
+							}
+						]
+					]
+				}
+			]
+		},
+		{
+			"id": "dedupe/wipe-previous",
+			"args": [
+				{
+					"t": "str",
+					"v": "foo foo"
+				},
+				{
+					"t": "int",
+					"v": 0
+				},
+				{
+					"t": "null"
+				},
+				{
+					"t": "undef"
+				},
+				{
+					"t": "bool",
+					"v": false
+				},
+				{
+					"t": "str",
+					"v": "b"
+				},
+				{
+					"t": "obj",
+					"v": [
+						[
+							"foo",
+							{
+								"t": "bool",
+								"v": false
+							}
+						]
+					]
+				}
+			]
+		},
+		{
+			"id": "dedupe/prefix-collision",
+			"args": [
+				{
+					"t": "str",
+					"v": "foo"
+				},
+				{
+					"t": "str",
+					"v": "foobar"
+				},
+				{
+					"t": "str",
+					"v": "bar"
+				},
+				{
+					"t": "obj",
+					"v": [
+						[
+							"foo",
+							{
+								"t": "bool",
+								"v": false
+							}
+						]
+					]
+				}
+			]
+		},
+		{
+			"id": "dedupe/hyphen-collision",
+			"args": [
+				{
+					"t": "str",
+					"v": "foo"
+				},
+				{
+					"t": "str",
+					"v": "foo-bar"
+				},
+				{
+					"t": "str",
+					"v": "bar"
+				},
+				{
+					"t": "obj",
+					"v": [
+						[
+							"foo",
+							{
+								"t": "bool",
+								"v": false
+							}
+						]
+					]
+				}
+			]
+		},
+		{
+			"id": "dedupe/vendor-prefix",
+			"args": [
+				{
+					"t": "str",
+					"v": "foo"
+				},
+				{
+					"t": "str",
+					"v": "-moz-foo-bar"
+				},
+				{
+					"t": "str",
+					"v": "bar"
+				},
+				{
+					"t": "obj",
+					"v": [
+						[
+							"foo",
+							{
+								"t": "bool",
+								"v": false
+							}
+						]
+					]
+				}
+			]
+		},
+		{
+			"id": "dedupe/toggle-then-off",
+			"args": [
+				{
+					"t": "str",
+					"v": "a"
+				},
+				{
+					"t": "obj",
+					"v": [
+						[
+							"a",
+							{
+								"t": "bool",
+								"v": true
+							}
+						]
+					]
+				},
+				{
+					"t": "obj",
+					"v": [
+						[
+							"a",
+							{
+								"t": "bool",
+								"v": false
+							}
+						]
+					]
+				}
+			]
+		},
+		{
+			"id": "dedupe/numeric-keys-toggle",
+			"args": [
+				{
+					"t": "str",
+					"v": "1"
+				},
+				{
+					"t": "str",
+					"v": "2"
+				},
+				{
+					"t": "obj",
+					"v": [
+						[
+							"1",
+							{
+								"t": "bool",
+								"v": false
+							}
+						]
+					]
+				}
+			]
+		},
+		{
+			"id": "bind/mapped-keys",
+			"args": [
+				{
+					"t": "obj",
+					"v": [
+						[
+							"a",
+							{
+								"t": "bool",
+								"v": true
+							}
+						],
+						[
+							"b",
+							{
+								"t": "bool",
+								"v": false
+							}
+						],
+						[
+							"f",
+							{
+								"t": "int",
+								"v": 1
+							}
+						]
+					]
+				}
+			]
+		},
+		{
+			"id": "bind/unmapped-passthrough",
+			"args": [
+				{
+					"t": "obj",
+					"v": [
+						[
+							"a",
+							{
+								"t": "bool",
+								"v": true
+							}
+						],
+						[
+							"x",
+							{
+								"t": "bool",
+								"v": true
+							}
+						],
+						[
+							"z",
+							{
+								"t": "int",
+								"v": 1
+							}
+						]
+					]
+				}
+			]
+		},
+		{
+			"id": "bind/falsy-mapping-fallback",
+			"args": [
+				{
+					"t": "str",
+					"v": "falsyMapped"
+				}
+			]
+		},
+		{
+			"id": "bind/zero-mapping-fallback",
+			"args": [
+				{
+					"t": "str",
+					"v": "zeroMapped"
+				}
+			]
+		},
+		{
+			"id": "bind/array-mapped",
+			"args": [
+				{
+					"t": "arr",
+					"v": [
+						{
+							"t": "str",
+							"v": "a"
+						},
+						{
+							"t": "str",
+							"v": "b"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "bind/nested-array-mapped",
+			"args": [
+				{
+					"t": "arr",
+					"v": [
+						{
+							"t": "str",
+							"v": "a"
+						},
+						{
+							"t": "arr",
+							"v": [
+								{
+									"t": "str",
+									"v": "b"
+								},
+								{
+									"t": "str",
+									"v": "c"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "bind/tostring-not-mapped",
+			"args": [
+				{
+					"t": "tostr",
+					"v": "a"
+				}
+			]
+		},
+		{
+			"id": "bind/string-args",
+			"args": [
+				{
+					"t": "str",
+					"v": "a"
+				},
+				{
+					"t": "int",
+					"v": 0
+				},
+				{
+					"t": "null"
+				},
+				{
+					"t": "undef"
+				},
+				{
+					"t": "bool",
+					"v": false
+				},
+				{
+					"t": "int",
+					"v": 1
+				},
+				{
+					"t": "str",
+					"v": "b"
+				}
+			]
+		},
+		{
+			"id": "unicode/accented",
+			"args": [
+				{
+					"t": "str",
+					"v": "café"
+				}
+			]
+		},
+		{
+			"id": "unicode/cjk",
+			"args": [
+				{
+					"t": "str",
+					"v": "类名"
+				}
+			]
+		},
+		{
+			"id": "unicode/emoji",
+			"args": [
+				{
+					"t": "str",
+					"v": "a-🎉-b"
+				}
+			]
+		},
+		{
+			"id": "unicode/combining",
+			"args": [
+				{
+					"t": "str",
+					"v": "é"
+				}
+			]
+		},
+		{
+			"id": "unicode/object-key",
+			"args": [
+				{
+					"t": "obj",
+					"v": [
+						[
+							"café",
+							{
+								"t": "bool",
+								"v": true
+							}
+						],
+						[
+							"类名",
+							{
+								"t": "bool",
+								"v": true
+							}
+						]
+					]
+				}
+			]
+		},
+		{
+			"id": "exotic/dotted",
+			"args": [
+				{
+					"t": "str",
+					"v": "a.b.c"
+				}
+			]
+		},
+		{
+			"id": "exotic/colon",
+			"args": [
+				{
+					"t": "str",
+					"v": "hover:bg-blue"
+				}
+			]
+		},
+		{
+			"id": "exotic/slash",
+			"args": [
+				{
+					"t": "str",
+					"v": "w-1/2"
+				}
+			]
+		},
+		{
+			"id": "exotic/bracket",
+			"args": [
+				{
+					"t": "str",
+					"v": "w-[32px]"
+				}
+			]
+		}
+	]
+}
